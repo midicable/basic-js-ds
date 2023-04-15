@@ -30,13 +30,15 @@ class BinarySearchTree {
             currNode.left = new Node(data);
             break;
           }
-        } else {
+        } else if (data > currNode.data) {
           if (currNode.right) {
             currNode = currNode.right;
           } else {
             currNode.right = new Node(data);
             break;
           }
+        } else {
+          break;
         }
       }
     }
@@ -80,13 +82,45 @@ class BinarySearchTree {
     while (currNode) {
       if (currNode.data == data) {
         if (currNode.left && currNode.right) {
-          
+          let minChildNodeParent = currNode.right;
+          let minChildNode = currNode.right.left;
+          if (!minChildNode) {
+            currNode.data = minChildNodeParent.data;
+            currNode.right = minChildNodeParent.right;
+            minChildNodeParent.data = undefined;
+            minChildNodeParent = null;
+          } else {
+            while (minChildNode) {
+              minChildNodeParent = minChildNode;
+              minChildNode = minChildNode.left;
+            }
+            currNode.data = minChildNodeParent.data;
+            minChildNodeParent.data = undefined;
+            minChildNodeParent = null;
+          }
         } else if (currNode.left) {
-
+          if (currNode == prevNode.left) {
+            prevNode.left = currNode.left;
+            currNode.data = undefined;
+            currNode = null
+          } else {
+            prevNode.right = currNode.left;
+            currNode.data = undefined;
+            currNode = null
+          }
         } else if (currNode.right) {
-
+          if (currNode == prevNode.left) {
+            prevNode.left = currNode.right;
+            currNode.data = undefined;
+            currNode = null
+          } else {
+            prevNode.right = currNode.right;
+            currNode.data = undefined;
+            currNode = null
+          }
         } else {
-
+          currNode.data = undefined;
+          currNode = null;
         }
       } else {
         if (data < currNode.data) {
@@ -101,13 +135,27 @@ class BinarySearchTree {
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this._root) {
+      return null;
+    } else {
+      let currNode = this._root;
+      while (currNode.left) {
+        currNode = currNode.left;
+      }
+      return currNode.data;
+    }
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this._root) {
+      return null;
+    } else {
+      let currNode = this._root;
+      while (currNode.right) {
+        currNode = currNode.right;
+      }
+      return currNode.data;
+    }
   }
 }
 
